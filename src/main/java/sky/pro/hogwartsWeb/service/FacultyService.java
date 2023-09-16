@@ -2,7 +2,7 @@ package sky.pro.hogwartsWeb.service;
 
 import org.springframework.stereotype.Service;
 import sky.pro.hogwartsWeb.model.Faculty;
-import sky.pro.hogwartsWeb.model.faculty;
+
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,4 +39,4 @@ public class FacultyService {
     }
 }
 
-}
+
