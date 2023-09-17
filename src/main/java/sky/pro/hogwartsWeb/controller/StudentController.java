@@ -26,7 +26,7 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public Student getStudent(@PathVariable long id) {
-        Student student=studentService.getStudent(id);
+        Student student = studentService.getStudent(id);
         return student;
     }
 
@@ -39,6 +39,7 @@ public class StudentController {
     public Student deleteStudent(@PathVariable long id) {
         return studentService.deleteStudent(id);
     }
+
     @GetMapping("/age/{age}")
     public List<Student> readAll(@PathVariable int age) {
         return studentService.readAll(age);

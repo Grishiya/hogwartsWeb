@@ -45,6 +45,7 @@ public class FacultyService {
         }
         return faculty;
     }
+
     public List<Faculty> readAll(String color) {
         return facultyHashMap.values().stream().
                 filter(faculty -> faculty.getColor().equals(color)).

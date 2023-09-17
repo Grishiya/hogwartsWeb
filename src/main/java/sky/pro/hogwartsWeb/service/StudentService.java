@@ -15,7 +15,7 @@ public class StudentService {
     private long id;
 
     public Student createStudent(Student student) {
-        if (studentHashMap.containsValue(student)){
+        if (studentHashMap.containsValue(student)) {
             throw new StudentException("Такой студент уже есть");
         }
         student.setId(++id);
@@ -45,6 +45,7 @@ public class StudentService {
         }
         return student;
     }
+
     public List<Student> readAll(int age) {
         return studentHashMap.values().stream().
                 filter(student -> student.getAge() == age).

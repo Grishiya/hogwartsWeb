@@ -30,21 +30,21 @@ class FacultyServiceTest {
         underTest.createFaculty(faculty);
         FacultyException exception = assertThrows(FacultyException.class, ()
                 -> underTest.createFaculty(faculty));
-        assertEquals("Такой факультет уже есть",exception.getMessage());
+        assertEquals("Такой факультет уже есть", exception.getMessage());
     }
 
     @Test
     void getFaculty_checkGetFacultyInMap_returnedFaculty() {
         underTest.createFaculty(faculty);
         Faculty result = underTest.getFaculty(1);
-        assertEquals(faculty,result);
+        assertEquals(faculty, result);
     }
 
     @Test
     void getFaculty_checkExceptionIfFacultyNotInMap_returnedFacultyException() {
         FacultyException exception = assertThrows(FacultyException.class,
                 () -> underTest.getFaculty(faculty.getId()));
-        assertEquals("Такого факультета нет",exception.getMessage());
+        assertEquals("Такого факультета нет", exception.getMessage());
     }
 
     @Test
@@ -56,32 +56,35 @@ class FacultyServiceTest {
                 "brown"
         );
         Faculty result = underTest.updateFaculty(setFaculty);
-        assertNotEquals(faculty,result);
+        assertNotEquals(faculty, result);
     }
+
     @Test
     void updateFaculty_checkUpdateExceptionIfFacultyNotFoundMap_throwsException() {
         FacultyException exception = assertThrows(FacultyException.class,
                 () -> underTest.updateFaculty(faculty));
-        assertEquals("Такого факультета нет",exception.getMessage());
+        assertEquals("Такого факультета нет", exception.getMessage());
     }
+
     @Test
     void deleteFaculty_checkDeleteFacultyFromMap_deleteAndReturnedFaculty() {
         underTest.createFaculty(faculty);
         Faculty result = underTest.deleteFaculty(faculty.getId());
-        assertEquals(faculty,result);
+        assertEquals(faculty, result);
     }
 
     @Test
     void deleteFaculty_checkDeleteExceptionIfFacultyNotFoundMap_throwsException() {
         FacultyException exception = assertThrows(FacultyException.class,
                 () -> underTest.deleteFaculty(faculty.getId()));
-        assertEquals("Такого факультета нет",exception.getMessage());
+        assertEquals("Такого факультета нет", exception.getMessage());
     }
+
     @Test
-    void readAll_checkSortGetFacultysByAge_returnedFacultyByAge() {
+    void readAll_checkSortGetFacultyByColor_returnedFacultyByColor() {
         underTest.createFaculty(faculty);
         List<Faculty> result = underTest.readAll("brown");
-        assertEquals(List.of(faculty),result);
+        assertEquals(List.of(faculty), result);
     }
 }
 

@@ -41,7 +41,7 @@ public class FacultyController {
         return facultyService.deleteFaculty(id);
     }
 
-    @GetMapping("/age/{age}")
+    @GetMapping("/color/{color}")
     public List<Faculty> readAll(@PathVariable String color) {
         return facultyService.readAll(color);
     }
