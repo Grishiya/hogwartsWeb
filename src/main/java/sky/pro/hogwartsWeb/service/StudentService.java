@@ -3,6 +3,7 @@ package sky.pro.hogwartsWeb.service;
 import org.springframework.stereotype.Service;
 import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Student;
+import sky.pro.hogwartsWeb.repository.StudentRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,16 +12,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
-    private final HashMap<Long, Student> studentHashMap = new HashMap<>();
-    private long id;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
 
     public Student createStudent(Student student) {
-        if (studentHashMap.containsValue(student)) {
+        if (studentRepository.fi()) {
             throw new StudentException("Такой студент уже есть");
         }
-        student.setId(++id);
-        studentHashMap.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student getStudent(long id) {
