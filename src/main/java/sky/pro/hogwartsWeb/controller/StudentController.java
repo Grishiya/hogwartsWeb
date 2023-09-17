@@ -8,6 +8,7 @@ import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.service.StudentService;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -23,7 +24,7 @@ public class StudentController {
         return studentService.createStudent(student);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Student getStudent(@PathVariable long id) {
         Student student=studentService.getStudent(id);
         return student;
@@ -34,13 +35,12 @@ public class StudentController {
         return studentService.updateStudent(student);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public Student deleteStudent(@PathVariable long id) {
         return studentService.deleteStudent(id);
     }
-
-    @GetMapping
-    public Collection<Student> allStudent() {
-        return studentService.getAll();
+    @GetMapping("/age/{age}")
+    public List<Student> readAll(@PathVariable int age) {
+        return studentService.readAll(age);
     }
 }

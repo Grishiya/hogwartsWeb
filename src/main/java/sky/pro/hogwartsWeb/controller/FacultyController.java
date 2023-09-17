@@ -7,23 +7,27 @@ import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.service.FacultyService;
 import sky.pro.hogwartsWeb.service.StudentService;
 
+import java.util.Collection;
+import java.util.List;
+
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
 
-        private final FacultyService facultyService;
+    private final FacultyService facultyService;
 
-        public  FacultyController(FacultyService facultyService) {
-            this.facultyService = facultyService;
-        }
+    public FacultyController(FacultyService facultyService) {
+        this.facultyService = facultyService;
+    }
 
-        @PostMapping
-        public Faculty createFaculty(@RequestBody Faculty faculty) {
-            return facultyService.createFaculty(faculty);
+    @PostMapping
+    public Faculty createFaculty(@RequestBody Faculty faculty) {
+        return facultyService.createFaculty(faculty);
 
     }
+
     @GetMapping("{id}")
-    public ResponseEntity getFaculty(@PathVariable Long id) {
+    public ResponseEntity<Faculty> getFaculty(@PathVariable long id) {
         return ResponseEntity.ok(facultyService.getFaculty(id));
     }
 
@@ -32,8 +36,18 @@ public class FacultyController {
         return facultyService.updateFaculty(faculty);
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteFaculty(@PathVariable long id) {
-        return ResponseEntity.ok(facultyService.deleteFaculty(id));
+    @DeleteMapping("{id}")
+    public Faculty deleteFaculty(@PathVariable long id) {
+        return facultyService.deleteFaculty(id);
+    }
+
+    @GetMapping
+    public Collection<Faculty> getAllFaculty() {
+        return facultyService.getAll();
+    }
+
+    @GetMapping("/age/{age}")
+    public List<Faculty> readAll(@PathVariable String color) {
+        return facultyService.readAll(color);
     }
 }

@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
     private final HashMap<Long, Student> studentHashMap = new HashMap<>();
-    private long id = 0;
+    private long id;
 
     public Student createStudent(Student student) {
-        if (studentHashMap.containsValue(student)) {
+        if (studentHashMap.containsValue(student)){
             throw new StudentException("Такой студент уже есть");
         }
         student.setId(++id);
@@ -45,14 +45,9 @@ public class StudentService {
         }
         return student;
     }
-
-    public Collection<Student> getAll() {
-        return studentHashMap.values();
-    }
-
     public List<Student> readAll(int age) {
         return studentHashMap.values().stream().
                 filter(student -> student.getAge() == age).
-                toList();
+                collect(Collectors.toUnmodifiableList());
     }
 }

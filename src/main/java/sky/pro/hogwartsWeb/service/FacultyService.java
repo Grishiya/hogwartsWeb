@@ -23,7 +23,7 @@ public class FacultyService {
         return faculty;
     }
 
-    public Faculty getFaculty(Long id) {
+    public Faculty getFaculty(long id) {
         if (!facultyHashMap.containsKey(id)) {
             throw new FacultyException("Такого факультета нет");
         }
@@ -38,7 +38,7 @@ public class FacultyService {
         return faculty;
     }
 
-    public Faculty deleteFaculty(Long id) {
+    public Faculty deleteFaculty(long id) {
         Faculty faculty = facultyHashMap.remove(id);
         if (faculty == null) {
             throw new FacultyException("Такого факультета нет");
