@@ -41,11 +41,6 @@ public class FacultyController {
         return facultyService.deleteFaculty(id);
     }
 
-    @GetMapping
-    public Collection<Faculty> getAllFaculty() {
-        return facultyService.getAll();
-    }
-
     @GetMapping("/age/{age}")
     public List<Faculty> readAll(@PathVariable String color) {
         return facultyService.readAll(color);
