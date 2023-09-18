@@ -8,14 +8,12 @@ import sky.pro.hogwartsWeb.model.Faculty;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
-    @ExceptionHandler(StudentException.class)
-    public ResponseEntity<String> handleStudentException(StudentException exception) {
+    @ExceptionHandler({StudentException.class, FacultyException.class})
+    public ResponseEntity<String> handleStudentException(RuntimeException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
-
-    @ExceptionHandler(FacultyException.class)
-    public ResponseEntity<String> handleFacultyException(FacultyException exception) {
+    public ResponseEntity<String> handleFacultyException(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
