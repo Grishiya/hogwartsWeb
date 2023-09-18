@@ -20,7 +20,7 @@ public class StudentService {
 
 
     public Student createStudent(Student student) {
-        if (studentRepository.fi()) {
+        if (studentRepository.findByNameAndAge(student.getName(),student.getAge()).isPresent()) {
             throw new StudentException("Такой студент уже есть");
         }
         return studentRepository.save(student);

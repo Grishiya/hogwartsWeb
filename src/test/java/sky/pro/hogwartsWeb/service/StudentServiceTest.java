@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Student;
+import sky.pro.hogwartsWeb.repository.StudentRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
