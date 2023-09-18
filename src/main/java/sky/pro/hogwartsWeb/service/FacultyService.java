@@ -1,8 +1,10 @@
 package sky.pro.hogwartsWeb.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.model.Faculty;
+import sky.pro.hogwartsWeb.repository.FacultyRepository;
 
 
 import java.util.Collection;
@@ -11,8 +13,11 @@ import java.util.List;
 
 @Service
 public class FacultyService {
-    private final HashMap<Long, Faculty> facultyHashMap = new HashMap<>();
-    private long id = 0;
+    private final FacultyRepository facultyRepository;
+
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     public Faculty createFaculty(Faculty faculty) {
         if (facultyHashMap.containsValue(faculty)) {
