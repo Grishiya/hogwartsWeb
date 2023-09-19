@@ -58,7 +58,7 @@ public class FacultyService {
     }
 
     public List<Faculty> readAll(String color) {
-        return facultyRepository.findByColorIgnoreCase(color);
+        return facultyRepository.findByColor(color);
     }
 
     public List<Student> findByFaculty_id(long faculty_id) {

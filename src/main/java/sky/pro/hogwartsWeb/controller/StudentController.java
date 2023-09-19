@@ -4,6 +4,7 @@ import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sky.pro.hogwartsWeb.exception.StudentException;
+import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.service.StudentService;
 
@@ -41,14 +42,16 @@ public class StudentController {
     }
 
     @GetMapping("/age/{age}")
-    public List<Student> readAll(@PathVariable int age) {
-        return studentService.readAll(age);
+
+    public List<Student> readAllAge(@RequestParam int age, @RequestParam(defaultValue = "0") int age2) {
+        if (age2 == 0) {
+            return studentService.readAll(age);
+        }
+        return studentService.findByAgeBetween(age, age2);
     }
 
-    @GetMapping("/age/{sort_age}")
-    public List<Student> sortByStudentMinAndMaxAge(
-            @PathVariable int minAge,
-            @PathVariable int maxAge) {
-        return studentService.findByMinAndMaxAge(minAge, maxAge);
+    @GetMapping("/{id}/faculty")
+    public Faculty readFaculty(@PathVariable long id) {
+        return studentService.findStudentByFacultyId(id);
     }
 }
