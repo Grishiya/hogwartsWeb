@@ -10,6 +10,7 @@ import sky.pro.hogwartsWeb.repository.FacultyRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FacultyService {
@@ -20,41 +21,39 @@ public class FacultyService {
     }
 
     public Faculty createFaculty(Faculty faculty) {
-        if (facultyHashMap.containsValue(faculty)) {
+        if (facultyRepository.findByNameAndColor(faculty.getName(), faculty.getColor()).isPresent()) {
             throw new FacultyException("Такой факультет уже есть");
         }
-        faculty.setId(++id);
-        facultyHashMap.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty getFaculty(long id) {
-        if (!facultyHashMap.containsKey(id)) {
+        Optional<Faculty> faculty = facultyRepository.findById(id);
+        if (faculty.isEmpty()) {
             throw new FacultyException("Такого факультета нет");
         }
-        return facultyHashMap.get(id);
+        return faculty.get();
     }
 
     public Faculty updateFaculty(Faculty faculty) {
-        if (!facultyHashMap.containsKey(faculty.getId())) {
+        if (!facultyRepository.findById(faculty.getId()).isEmpty()) {
             throw new FacultyException("Такого факультета нет");
         }
-        facultyHashMap.put(faculty.getId(), faculty);
-        return faculty;
+
+        return facultyRepository.save(faculty);
     }
 
     public Faculty deleteFaculty(long id) {
-        Faculty faculty = facultyHashMap.remove(id);
-        if (faculty == null) {
+        Optional<Faculty> faculty = facultyRepository.findById(id);
+        if (faculty.isEmpty()) {
             throw new FacultyException("Такого факультета нет");
         }
-        return faculty;
+        facultyRepository.deleteById(id);
+        return faculty.get();
     }
 
     public List<Faculty> readAll(String color) {
-        return facultyHashMap.values().stream().
-                filter(faculty -> faculty.getColor().equals(color)).
-                toList();
+        return facultyRepository.findByColor(color);
     }
 }
 

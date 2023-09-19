@@ -8,6 +8,7 @@ import sky.pro.hogwartsWeb.repository.StudentRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,32 +27,31 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student getStudent(long id) {
-        if (!studentHashMap.containsKey(id)) {
+    public Student getStudent(Long id) {
+     Optional<Student> student= studentRepository.findById(id);
+        if (student.isEmpty()){
             throw new StudentException("Такого студента нет");
         }
-        return studentHashMap.get(id);
+        return student.get();
     }
 
     public Student updateStudent(Student student) {
-        if (!studentHashMap.containsKey(student.getId())) {
+        if (!studentRepository.findById(student.getId()).isEmpty()){
             throw new StudentException("Такого студента нет");
         }
-        studentHashMap.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
-    public Student deleteStudent(long id) {
-        Student student = studentHashMap.remove(id);
-        if (student == null) {
-            throw new StudentException("Такого студента нет");
+    public Student deleteStudent(Long id) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isEmpty()) {
+            throw new RuntimeException("Такого студента нет");
         }
-        return student;
+        studentRepository.deleteById(id);
+        return student.get();
     }
 
     public List<Student> readAll(int age) {
-        return studentHashMap.values().stream().
-                filter(student -> student.getAge() == age).
-                collect(Collectors.toUnmodifiableList());
+        return studentRepository.findByAge(age);
     }
 }
