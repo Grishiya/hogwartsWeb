@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.model.Faculty;
+import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.FacultyRepository;
+import sky.pro.hogwartsWeb.repository.StudentRepository;
 
 
 import java.util.Collection;
@@ -15,10 +17,13 @@ import java.util.Optional;
 @Service
 public class FacultyService {
     private final FacultyRepository facultyRepository;
+    private final StudentRepository studentRepository;
 
-    public FacultyService(FacultyRepository facultyRepository) {
+    public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
         this.facultyRepository = facultyRepository;
+        this.studentRepository = studentRepository;
     }
+
 
     public Faculty createFaculty(Faculty faculty) {
         if (facultyRepository.findByNameAndColor(faculty.getName(), faculty.getColor()).isPresent()) {
@@ -53,7 +58,11 @@ public class FacultyService {
     }
 
     public List<Faculty> readAll(String color) {
-        return facultyRepository.findByColor(color);
+        return facultyRepository.findByColorIgnoreCase(color);
+    }
+
+    public List<Student> findByFaculty_id(long faculty_id) {
+        return studentRepository.findByFaculty_id(faculty_id);
     }
 }
 

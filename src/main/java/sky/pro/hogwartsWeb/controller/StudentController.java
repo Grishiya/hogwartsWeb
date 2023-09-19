@@ -44,4 +44,11 @@ public class StudentController {
     public List<Student> readAll(@PathVariable int age) {
         return studentService.readAll(age);
     }
+
+    @GetMapping("/age/{sort_age}")
+    public List<Student> sortByStudentMinAndMaxAge(
+            @PathVariable int minAge,
+            @PathVariable int maxAge) {
+        return studentService.findByMinAndMaxAge(minAge, maxAge);
+    }
 }
