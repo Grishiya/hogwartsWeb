@@ -1,0 +1,15 @@
+
+в FacultyController везде перед {id} добавь слеш /
+в ControllerExceptionHandler ошибки обрабатываются одинаково,
+ поэтому можно их объединить.
+ Для этого в аннотации @ExceptionHandler фигурных скобках {}
+ указываем названия классов-исключения. А в сигнатуре метода
+ пишем родительский класс, в нашем случае -RuntimeException:
+	@ExceptionHandler({StudentException.class, FacultyException.class})
+
+    public ResponseEntity<String> handleStudentException
+    (RuntimeException exception) {
+
+поправь в классах студента и факультета порядок:
+ сначала поля, затем конструктор, затем уже остальные методы
+файл read.txt перенеси в resources
