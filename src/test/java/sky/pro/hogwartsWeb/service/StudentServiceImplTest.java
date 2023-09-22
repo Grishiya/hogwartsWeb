@@ -1,19 +1,15 @@
 package sky.pro.hogwartsWeb.service;
 
 import org.junit.jupiter.api.Test;
-import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Student;
-import sky.pro.hogwartsWeb.repository.StudentRepository;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StudentServiceTest {
-    StudentService underTest = new StudentService();
+class StudentServiceImplTest {
+    StudentServiceImpl underTest = new StudentServiceImpl();
     Student student = new Student(
             1,
             "Grisha",
