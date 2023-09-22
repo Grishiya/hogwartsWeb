@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sky.pro.hogwartsWeb.exception.StudentException;
+import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.StudentRepository;
 
@@ -21,10 +22,14 @@ class StudentServiceImplTest {
     StudentRepository studentRepository;
     @InjectMocks
     StudentServiceImpl underTest;
+    Faculty faculty = new Faculty(
+            1L
+            , "griffindor"
+            , "gold");
     Student student = new Student(
             1L,
             "Grisha",
-            29
+            29,faculty
     );
 
 

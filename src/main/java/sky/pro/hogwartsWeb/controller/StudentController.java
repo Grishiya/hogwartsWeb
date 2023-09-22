@@ -5,7 +5,9 @@ import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.service.StudentService;
+
 import java.util.List;
+
 @RestController
 @RequestMapping("/student")
 public class StudentController {

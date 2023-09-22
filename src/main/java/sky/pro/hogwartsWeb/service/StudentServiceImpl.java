@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StudentServiceImpl implements StudentService  {
+public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
@@ -53,10 +53,11 @@ public class StudentServiceImpl implements StudentService  {
         return student.get();
     }
 
-        @Override
+    @Override
     public List<Student> readAll(int age) {
         return studentRepository.findByAge(age);
     }
+
     @Override
     public List<Student> findByAgeBetween(int min, int max) {
         return studentRepository.findByAgeBetween(min, max);

@@ -105,13 +105,13 @@ class FacultyServiceImplTest {
     }
 
     @Test
-    void readAll_checkSortGetFacultyByNameOrColor_returnedFacultyByNameOrColor() {
+    void readAll_checkSortGetFacultyByColor_returnedFacultyColor() {
         underTest.createFaculty(faculty);
         when(facultyRepository.findByColor(
                 faculty.getColor()))
-                .thenReturn(List.of(faculty));
-        List<Faculty> result = underTest.readAll("brown");
-        assertEquals(List.of(faculty), result);
+                .thenReturn(Optional.of(faculty));
+        Faculty result = underTest.readColor("brown");
+        assertEquals(faculty, result);
     }
 }
 

@@ -7,6 +7,7 @@ import sky.pro.hogwartsWeb.model.Student;
 import javax.swing.text.Position;
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByNameAndAge(String name, int age);
