@@ -33,7 +33,7 @@ public class StudentServiceImpl implements StudentService {
     }
 @Override
     public Student updateStudent(Student student) {
-        if (!studentRepository.findById(student.getId()).isEmpty()){
+        if (studentRepository.findById(student.getId()).isEmpty()){
             throw new StudentException("Такого студента нет");
         }
         return studentRepository.save(student);
@@ -42,7 +42,7 @@ public class StudentServiceImpl implements StudentService {
     public Student deleteStudent(Long id) {
         Optional<Student> student = studentRepository.findById(id);
         if (student.isEmpty()) {
-            throw new RuntimeException("Такого студента нет");
+            throw new StudentException("Такого студента нет");
         }
         studentRepository.deleteById(id);
         return student.get();
