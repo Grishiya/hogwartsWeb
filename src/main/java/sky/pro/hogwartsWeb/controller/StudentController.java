@@ -1,16 +1,11 @@
 package sky.pro.hogwartsWeb.controller;
 
-import org.apache.coyote.Response;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.service.StudentService;
-
-import java.util.Collection;
 import java.util.List;
-
 @RestController
 @RequestMapping("/student")
 public class StudentController {
@@ -51,7 +46,8 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/faculty")
-    public Faculty readFaculty(@PathVariable long id) {
-        return studentService.findStudentByFacultyId(id);
+    public Faculty getFaculty(@PathVariable long id) {
+        return studentService.readFaculty(id);
     }
+
 }

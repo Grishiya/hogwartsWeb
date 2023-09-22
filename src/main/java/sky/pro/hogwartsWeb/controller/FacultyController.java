@@ -5,9 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.service.FacultyService;
-import sky.pro.hogwartsWeb.service.StudentService;
 
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -42,7 +40,18 @@ public class FacultyController {
     }
 
     @GetMapping("/color/{color}")
-    public List<Faculty> readAll(@PathVariable String color) {
-        return facultyService.readAll(color);
+    public Faculty readAll(@PathVariable String color) {
+        return facultyService.readColor(color);
+    }
+
+    @GetMapping("/find")
+    public Faculty findByColorAndNameIgnoreCase(@RequestParam(required = false) String name,
+                                                      @RequestParam(required = false) String color) {
+        return facultyService.findByColorOrNameIgnoreCase(name, color);
+    }
+
+    @GetMapping("/studentds")
+    public List<Student> getStudentsByFaculty(@RequestParam long id) {
+        return facultyService.findStudentsByFacultyId(id);
     }
 }

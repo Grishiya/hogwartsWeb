@@ -1,69 +1,23 @@
 package sky.pro.hogwartsWeb.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
-import sky.pro.hogwartsWeb.repository.FacultyRepository;
-import sky.pro.hogwartsWeb.repository.StudentRepository;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Service
-public class StudentService {
-    private final StudentRepository studentRepository;
-    private final FacultyRepository facultyRepository;
+public interface StudentService {
+    Student createStudent(Student student);
 
-    public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
-        this.studentRepository = studentRepository;
-        this.facultyRepository = facultyRepository;
-    }
+    Student getStudent(Long id);
 
-    public Student createStudent(Student student) {
-        if (studentRepository.findByNameAndAge(student.getName(), student.getAge()).isPresent()) {
-            throw new StudentException("Такой студент уже есть");
-        }
-        return studentRepository.save(student);
-    }
+    Student updateStudent(Student student);
 
-    public Student getStudent(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
-        if (student.isEmpty()) {
-            throw new StudentException("Такого студента нет");
-        }
-        return student.get();
-    }
+    Student deleteStudent(Long id);
 
-    public Student updateStudent(Student student) {
-        if (!studentRepository.findById(student.getId()).isEmpty()) {
-            throw new StudentException("Такого студента нет");
-        }
-        return studentRepository.save(student);
-    }
+    List<Student> readAll(int age);
 
-    public Student deleteStudent(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
-        if (student.isEmpty()) {
-            throw new RuntimeException("Такого студента нет");
-        }
-        studentRepository.deleteById(id);
-        return student.get();
-    }
+    List<Student> findByAgeBetween(int min, int max);
 
-    public List<Student> readAll(int age) {
-        return studentRepository.findByAge(age);
-    }
 
-    public List<Student> findByAgeBetween(int min, int max) {
-        return studentRepository.findByAgeBetween(min, max);
-    }
-
-    public Faculty findStudentByFacultyId(Long id) {
-        return getStudent(id).getFaculty();
-    }
+    Faculty readFaculty(long id);
 }
