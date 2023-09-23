@@ -7,7 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.model.Faculty;
+import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.FacultyRepository;
+import sky.pro.hogwartsWeb.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,8 @@ import static org.mockito.Mockito.when;
 class FacultyServiceImplTest {
     @Mock
     FacultyRepository facultyRepository;
+    @Mock
+    StudentRepository studentRepository;
     @InjectMocks
     FacultyServiceImpl underTest;
     Faculty faculty = new Faculty(
@@ -26,6 +30,10 @@ class FacultyServiceImplTest {
             "Griffindor",
             "brown"
     );
+    Student student = new Student(
+            1L
+            , "Grisha"
+            , 29,faculty);
 
 
     @Test
@@ -106,12 +114,55 @@ class FacultyServiceImplTest {
 
     @Test
     void readAll_checkSortGetFacultyByColor_returnedFacultyColor() {
-        underTest.createFaculty(faculty);
+
         when(facultyRepository.findByColor(
                 faculty.getColor()))
                 .thenReturn(Optional.of(faculty));
         Faculty result = underTest.readColor("brown");
         assertEquals(faculty, result);
+    }
+
+    @Test
+    void findByNameOrColorIgnoreCase_checkReturnedFacultyByNameOrColor_returnedFaculty() {
+        when(facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(
+                "griffindor",
+                "Brown"))
+                .thenReturn(Optional.of(faculty));
+        Faculty result = underTest.findByNameOrColorIgnoreCase(
+                "griffindor"
+                , "Brown");
+        assertEquals(faculty,result);
+    }
+
+    @Test
+    void findByNameOrColorIgnoreCase_checkExceptionIfFacultyNotInRepository_throwsException() {
+        when(facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(
+                faculty.getName()
+                , faculty.getColor()
+        )).thenReturn(Optional.empty());
+        FacultyException exception = assertThrows(FacultyException.class
+                , () -> underTest.findByNameOrColorIgnoreCase(faculty.getName(), faculty.getColor()));
+        assertEquals("Такого факультета нет", exception.getMessage());
+    }
+
+    @Test
+    void findStudentsByFacultyId_checkFindStudentInFacultyById_returnedStudentInFaculty() {
+        when(facultyRepository.existsById(faculty.getId()))
+                .thenReturn(true);
+        when(studentRepository.findByFaculty_id(student.getFaculty().getId()))
+                .thenReturn(List.of(student));
+        List<Student> result = underTest.findStudentsByFacultyId(student.getFaculty().getId());
+        assertEquals(List.of(student),result);
+
+    }
+
+    @Test
+    void findStudentsByFacultyId_checkExceptionIfStudentNotFacultyRepository_throwsException() {
+        when(facultyRepository.existsById(faculty.getId()))
+                .thenReturn(false);
+        FacultyException exception = assertThrows(FacultyException.class
+                , () -> underTest.findStudentsByFacultyId(student.getFaculty().getId()));
+        assertEquals("Такого факультета нет", exception.getMessage());
     }
 }
 

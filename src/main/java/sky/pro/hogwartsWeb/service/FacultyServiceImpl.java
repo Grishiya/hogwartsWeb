@@ -67,9 +67,9 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Faculty findByColorOrNameIgnoreCase(String name, String color) {
+    public Faculty findByNameOrColorIgnoreCase(String name, String color) {
         Optional<Faculty> faculty = facultyRepository
-                .findByColorOrNameIgnoreCase(name, color);
+                .findByNameIgnoreCaseOrColorIgnoreCase(name, color);
         if (faculty.isEmpty()) {
             throw new FacultyException("Такого факультета нет");
         }
