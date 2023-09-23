@@ -8,7 +8,7 @@ import sky.pro.hogwartsWeb.model.Faculty;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
-    @ExceptionHandler({StudentException.class, FacultyException.class})
+    @ExceptionHandler({StudentException.class, FacultyException.class, AvatarNotFoundException.class})
     public ResponseEntity<String> handleStudentException(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());

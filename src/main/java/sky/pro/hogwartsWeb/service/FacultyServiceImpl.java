@@ -77,7 +77,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public List<Student> findStudentsByFacultyId(long id) {
+    public List<Student> findStudentsByFaculty_id(long id) {
         if (!facultyRepository.existsById(id)) {
             throw new FacultyException("Такого факультета нет");
         }
