@@ -26,21 +26,32 @@ class AvatarServiceImplTest {
 
     AvatarServiceImpl avatarService = new AvatarServiceImpl(studentService, avatarRepository, avatarsDir);
     Faculty faculty = new Faculty(1L, "griffindor", "gold");
-    Student student = new Student(1L, "Harry", 13,faculty);
+    Student student = new Student(1L, "Harry", 13);
 
     @Test
     void uploadAvatar__avatarSavedToDbAndDirectory() throws IOException {
-        MultipartFile file = new MockMultipartFile("1.jpg", "1.jpg", "jpg", new byte[]{});
+        MultipartFile file = new MockMultipartFile("1.jpg",
+                "1.jpg"
+                , "jpg"
+                , new byte[]{});
 
         when(studentService.read(student.getId())).thenReturn(student);
-        when(avatarRepository.findByStudent_id(student.getId())).thenReturn(Optional.empty());
+        when(avatarRepository.findByStudent_id(student.getId()))
+                .thenReturn(Optional.empty());
 
         avatarService.uploadAvatar(student.getId(), file);
 
         verify(avatarRepository, times(1)).save(any());
-        assertTrue(FileUtils.canRead(new File(avatarsDir + "/" + student.getId() + "." + file.getContentType())));
+        assertTrue(FileUtils.canRead(new File(
+                avatarsDir + "/"
+                        + student.getId()
+                        + "." + file.getContentType())));
     }
 
+    @Test
+    void readFromDB() {
+
+    }
 
     @Test
     void readFromDB_avatarIsNotInDB_() {
