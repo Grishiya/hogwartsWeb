@@ -30,7 +30,7 @@ class StudentServiceImplTest {
     Student student = new Student(
             1L,
             "Grisha",
-            29,faculty
+            29
     );
 
 

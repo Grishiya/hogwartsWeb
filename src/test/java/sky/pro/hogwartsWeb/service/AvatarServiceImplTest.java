@@ -2,6 +2,8 @@ package sky.pro.hogwartsWeb.service;
 
 import nonapi.io.github.classgraph.utils.FileUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sky.pro.hogwartsWeb.exception.AvatarNotFoundException;
@@ -13,11 +15,12 @@ import sky.pro.hogwartsWeb.service.StudentService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class AvatarServiceImplTest {
 
     StudentService studentService = mock(StudentService.class);
@@ -25,7 +28,6 @@ class AvatarServiceImplTest {
     String avatarsDir = "./src/test/resources";
 
     AvatarServiceImpl avatarService = new AvatarServiceImpl(studentService, avatarRepository, avatarsDir);
-    Faculty faculty = new Faculty(1L, "griffindor", "gold");
     Student student = new Student(1L, "Harry", 13);
 
     @Test
@@ -50,6 +52,17 @@ class AvatarServiceImplTest {
 
     @Test
     void readFromDB() {
+Avatar avatar=new Avatar(
+        1L
+        ,avatarsDir
+        ,300L
+        ,".jpg"
+        ,new byte[8]
+        ,student);
+        when(avatarRepository.findByStudent_id(student.getId()))
+                .thenReturn(Optional.of(avatar));
+        Avatar result = avatarService.readFromDB(student.getId());
+        assertEquals(avatar,result);
 
     }
 
