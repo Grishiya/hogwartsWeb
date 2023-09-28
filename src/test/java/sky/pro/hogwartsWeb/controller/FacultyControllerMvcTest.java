@@ -23,14 +23,13 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.postgresql.hostchooser.HostRequirement.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.web.servlet.function.RequestPredicates.param;
 
 @WebMvcTest(controllers = {FacultyController.class})
-public class FacultyControllerTest {
+public class FacultyControllerMvcTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -62,7 +61,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void readFaculty__status200AndReturnStudent() throws Exception {
+    void readFaculty__status200AndReturnFaculty() throws Exception {
         when(facultyRepository.findById(anyLong())).thenReturn(Optional.of(faculty));
         mockMvc.perform(get("/faculty/" + faculty.getId()))
                 .andExpect(status().isOk())
