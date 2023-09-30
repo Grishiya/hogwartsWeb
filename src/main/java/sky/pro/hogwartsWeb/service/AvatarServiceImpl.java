@@ -1,6 +1,7 @@
 package sky.pro.hogwartsWeb.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sky.pro.hogwartsWeb.exception.AvatarNotFoundException;
@@ -11,6 +12,7 @@ import sky.pro.hogwartsWeb.repository.AvatarRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -61,7 +63,12 @@ public class AvatarServiceImpl implements AvatarService {
         return avatarRepository.findByStudent_id(id)
                 .orElseThrow(() -> new AvatarNotFoundException("Аватар не найден"));
     }
+    @Override
+    public List<Avatar> getPage(int pageNo, int size) {
 
+        PageRequest pageRequest = PageRequest.of(pageNo, size);
+        return avatarRepository.findAll(pageRequest).getContent();
+    }
     private String getExtensions(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }

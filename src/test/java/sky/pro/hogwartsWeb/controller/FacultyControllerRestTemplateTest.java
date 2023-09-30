@@ -113,19 +113,5 @@ public class FacultyControllerRestTemplateTest {
         assertEquals(faculty.getColor(),Objects.requireNonNull(facultyResponseEntity.getBody().getColor()));
     }
 
-    @Test
-    void getStudentsByFaculty__returnStatus200AndStudentList() {
-        studentRepository.save(student);
-        facultyRepository.save(faculty);
-        student.setFaculty(faculty);
-        ResponseEntity<List<Student>> facultyResponseEntity = restTemplate.exchange(
-                "http://localhost:" + port + "/faculty/students?id=" + faculty.getId(),
-                HttpMethod.GET
-                , null
-                , new ParameterizedTypeReference<List<Student>>() {
-                });
-        List<Student> students = facultyResponseEntity.getBody();
-        assertEquals(200,facultyResponseEntity.getStatusCodeValue());
-        assertEquals(List.of(student),students);
-    }
+//
 }

@@ -25,5 +25,5 @@ public interface StudentService {
     Integer findAvgAge();
 
 
-    List<Student> findFiveStudent();
+    List<Student> findLastFiveStudent();
 }

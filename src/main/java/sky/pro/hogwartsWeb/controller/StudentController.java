@@ -63,6 +63,6 @@ public class StudentController {
 
     @GetMapping("/lust-five-Student")
     public List<Student> findLustFiveStudent() {
-        return studentService.findFiveStudent();
+        return studentService.findLastFiveStudent();
     }
 }
