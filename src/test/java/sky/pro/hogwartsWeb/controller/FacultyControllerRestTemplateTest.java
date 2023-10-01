@@ -8,15 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.FacultyRepository;
 import sky.pro.hogwartsWeb.repository.StudentRepository;
-
+import org.springframework.http.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,8 +30,7 @@ public class FacultyControllerRestTemplateTest {
     @Autowired
     StudentRepository studentRepository;
     Faculty faculty = new Faculty(1L, "Griffindor", "gold");
-    Student student = new Student(1L, "Harry", 16);
-    Student student2 = new Student(1L, "Hфarry", 26);
+
 
 
     @AfterEach
@@ -114,20 +110,20 @@ public class FacultyControllerRestTemplateTest {
 
     @Test
     void readStudentsInFaculty__returnStatus200AndStudentsList() {
-       Faculty saveFaculty= facultyRepository.save(faculty);
-
-        student.setFaculty(saveFaculty);
+        Faculty saveFaculty = facultyRepository.save(faculty);
+        Student student1 = new Student(1L, "Harry", 13);
+        Student student2 = new Student(2L, "Ron", 13);
+        student1.setFaculty(saveFaculty);
         student2.setFaculty(saveFaculty);
-        studentRepository.save(student);
-        studentRepository.save(student2);
+        Student s1 = studentRepository.save(student1);
+        Student s2 = studentRepository.save(student2);
         ResponseEntity<List<Student>> responseEntity = restTemplate.exchange(
                 "http://localhost:" + port + "/faculty/students?id=" + saveFaculty.getId(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Student>>() {
-                });
-        List<Student> result = responseEntity.getBody().stream().toList();
+                new ParameterizedTypeReference<List<Student>>(){});
+        List<Student> students = responseEntity.getBody();
         assertEquals(200, responseEntity.getStatusCodeValue());
-        assertEquals(List.of(student,student2),result);
+        assertEquals(List.of(student1, student2), students);
     }
 }
