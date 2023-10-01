@@ -33,7 +33,7 @@ class FacultyServiceImplTest {
     Student student = new Student(
             1L
             , "Grisha"
-            , 29,faculty);
+            , 29);
 
 
     @Test

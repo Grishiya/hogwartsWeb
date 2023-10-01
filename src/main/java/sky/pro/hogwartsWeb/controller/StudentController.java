@@ -22,13 +22,13 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public Student getStudent(@PathVariable Long id) {
+    public Student readStudent(@PathVariable Long id) {
         Student student = studentService.read(id);
         return student;
     }
 
     @PutMapping
-    public Student setStudent(@RequestBody Student student) {
+    public Student updateStudent(@RequestBody Student student) {
         return studentService.updateStudent(student);
     }
 
@@ -39,7 +39,7 @@ public class StudentController {
 
     @GetMapping("/age/{age}")
 
-    public List<Student> readAllAge(@RequestParam int age, @RequestParam(defaultValue = "0") int age2) {
+    public List<Student> readAll(@RequestParam int age, @RequestParam(defaultValue = "0") int age2) {
         if (age2 == 0) {
             return studentService.readAll(age);
         }
@@ -51,4 +51,18 @@ public class StudentController {
         return studentService.readFaculty(id);
     }
 
+    @GetMapping("/count")
+    public Integer findStudentCount() {
+        return studentService.findAllStudentCount();
+    }
+
+    @GetMapping("/average-age")
+    public Integer findStudentAvgAge() {
+        return studentService.findAvgAge();
+    }
+
+    @GetMapping("/lust-five-Student")
+    public List<Student> findLustFiveStudent() {
+        return studentService.findLastFiveStudent();
+    }
 }

@@ -11,8 +11,10 @@ import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.StudentRepository;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -30,8 +32,29 @@ class StudentServiceImplTest {
     Student student = new Student(
             1L,
             "Grisha",
-            29,faculty
+            29
     );
+    Student student2 = new Student(
+            2L,
+            "Grrisha",
+            29
+    );
+    Student student3 = new Student(
+            3L,
+            "Grissha",
+            29
+    );
+    Student student4 = new Student(
+            4L,
+            "Griisha",
+            29
+    );
+    Student student5= new Student(
+            5L,
+            "Ggrisha",
+            29
+    );
+    List<Student> students = List.of(student);
 
 
     @Test
@@ -127,7 +150,7 @@ class StudentServiceImplTest {
         StudentException exception = assertThrows(StudentException.class
                 , () -> underTest.readAll(student.getAge()));
         assertEquals("Студентов с таким возрастом нет," +
-                "введите другой возраст",exception.getMessage());
+                "введите другой возраст", exception.getMessage());
     }
 
     @Test
@@ -136,7 +159,7 @@ class StudentServiceImplTest {
                 , 30))
                 .thenReturn(List.of(student));
         List<Student> result = underTest.findByAgeBetween(12, 30);
-        assertEquals(List.of(student),result);
+        assertEquals(List.of(student), result);
     }
 
     @Test
@@ -146,7 +169,7 @@ class StudentServiceImplTest {
         StudentException exception = assertThrows(StudentException.class
                 , () -> underTest.findByAgeBetween(student.getAge(), student.getAge()));
         assertEquals("Студентов с таким возрастом нет," +
-                "введите другой возраст",exception.getMessage());
+                "введите другой возраст", exception.getMessage());
     }
 
     @Test
@@ -154,7 +177,7 @@ class StudentServiceImplTest {
         when(studentRepository.findById(student.getId()))
                 .thenReturn(Optional.of(student));
         Faculty result = underTest.readFaculty(student.getFaculty().getId());
-        assertEquals(faculty,result);
+        assertEquals(faculty, result);
     }
 
     @Test
@@ -163,6 +186,34 @@ class StudentServiceImplTest {
                 .thenReturn(Optional.empty());
         StudentException exception = assertThrows(StudentException.class
                 , () -> underTest.readFaculty(student.getFaculty().getId()));
-        assertEquals("Такого студента нет",exception.getMessage());
+        assertEquals("Такого студента нет", exception.getMessage());
+    }
+
+    @Test
+    void findAllStudentCount__returnNumberAllStudentInList() {
+        when(studentRepository.findAllStudentCount()).thenReturn(students.size());
+        Integer result = underTest.findAllStudentCount();
+        assertEquals(students.size(), result);
+    }
+
+    @Test
+    void findAvgAge__returnAvgAgeByStudent() {
+        when(studentRepository.findAvgAge())
+                .thenReturn((int) (students.stream().mapToInt(Student::getAge).average().getAsDouble()));
+        Integer result = underTest.findAvgAge();
+        assertEquals(29, result);
+    }
+
+    @Test
+    void findFiveLustStudent__returnLustStudentsInMap() {
+        when(studentRepository.findLastStudent(5)).thenReturn(students
+                .stream()
+                .sorted(
+                        Comparator.comparing(
+                                Student::getId).
+                                reversed())
+                .limit(5).collect(Collectors.toList()));
+        List<Student> result = underTest.findLastFiveStudent();
+        assertEquals(students,result);
     }
 }

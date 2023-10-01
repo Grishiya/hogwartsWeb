@@ -1,6 +1,7 @@
 package sky.pro.hogwartsWeb.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sky.pro.hogwartsWeb.model.Student;
 
@@ -17,4 +18,13 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByAgeBetween(int min, int max);
 
     List<Student> findByFaculty_id(long faculty_id);
+
+    @Query("select count(s) from Student s")
+    Integer findAllStudentCount();
+
+    @Query(value = "select avg(age) from Student age",nativeQuery = true)
+    Integer findAvgAge();
+
+    @Query(value = "select * from Student id order by id desc limit :size",nativeQuery = true)
+    List<Student> findLastStudent(int size);
 }

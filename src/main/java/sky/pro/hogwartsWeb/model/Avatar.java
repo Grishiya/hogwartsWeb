@@ -21,6 +21,8 @@ public class Avatar {
 
     }
 
+    public Avatar(long l, String avatarsDir, long l1, String s, byte[] bytes, Student student) {
+    }
 
 
     public Long getId() {
