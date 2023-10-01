@@ -151,7 +151,7 @@ class FacultyServiceImplTest {
                 .thenReturn(true);
         when(studentRepository.findByFaculty_id(student.getFaculty().getId()))
                 .thenReturn(List.of(student));
-        List<Student> result = underTest.findStudentsByFacultyId(student.getFaculty().getId());
+        List<Student> result = underTest.findStudentsByFaculty_id(student.getFaculty().getId());
         assertEquals(List.of(student),result);
 
     }
@@ -161,7 +161,7 @@ class FacultyServiceImplTest {
         when(facultyRepository.existsById(faculty.getId()))
                 .thenReturn(false);
         FacultyException exception = assertThrows(FacultyException.class
-                , () -> underTest.findStudentsByFacultyId(student.getFaculty().getId()));
+                , () -> underTest.findStudentsByFaculty_id(student.getFaculty().getId()));
         assertEquals("Такого факультета нет", exception.getMessage());
     }
 }

@@ -5,14 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.StudentRepository;
 
-import java.io.LineNumberInputStream;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +59,7 @@ class StudentServiceImplTest {
         when(studentRepository.findById(
                 student.getId()))
                 .thenReturn(Optional.of(student));
-        Student result = underTest.getStudent(student.getId());
+        Student result = underTest.read(student.getId());
         assertEquals(student, result);
     }
 
@@ -72,7 +69,7 @@ class StudentServiceImplTest {
                 student.getId()))
                 .thenReturn(Optional.empty());
         StudentException exception = assertThrows(StudentException.class,
-                () -> underTest.getStudent(student.getId()));
+                () -> underTest.read(student.getId()));
         assertEquals("Такого студента нет", exception.getMessage());
     }
 

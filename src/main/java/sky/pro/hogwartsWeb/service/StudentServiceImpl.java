@@ -1,7 +1,6 @@
 package sky.pro.hogwartsWeb.service;
 
 import org.springframework.stereotype.Service;
-import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
@@ -32,7 +31,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudent(Long id) {
+    public Student read(Long id) {
         Optional<Student> student = studentRepository.findById(id);
         if (student.isEmpty()) {
             throw new StudentException("Такого студента нет");
@@ -83,7 +82,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Faculty readFaculty(long id) {
 
-        return getStudent(id).getFaculty();
+        return read(id).getFaculty();
     }
 }
 

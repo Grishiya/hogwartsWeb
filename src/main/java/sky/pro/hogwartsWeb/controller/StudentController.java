@@ -1,7 +1,6 @@
 package sky.pro.hogwartsWeb.controller;
 
 import org.springframework.web.bind.annotation.*;
-import sky.pro.hogwartsWeb.exception.StudentException;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.service.StudentService;
@@ -24,7 +23,7 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public Student getStudent(@PathVariable Long id) {
-        Student student = studentService.getStudent(id);
+        Student student = studentService.read(id);
         return student;
     }
 
