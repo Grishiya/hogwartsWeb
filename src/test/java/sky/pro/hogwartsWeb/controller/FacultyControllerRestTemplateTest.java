@@ -34,6 +34,8 @@ public class FacultyControllerRestTemplateTest {
     StudentRepository studentRepository;
     Faculty faculty = new Faculty(1L, "Griffindor", "gold");
     Student student = new Student(1L, "Harry", 16);
+    Student student2 = new Student(1L, "Hфarry", 26);
+
 
     @AfterEach
     void afterEach() {
@@ -73,17 +75,14 @@ public class FacultyControllerRestTemplateTest {
     }
 
     @Test
-    void deleteFaculty__status200AndReturnFaculty() {
-        facultyRepository.save(faculty);
+    void delete__returnStatus200() {
+        Faculty f = facultyRepository.save(faculty);
         ResponseEntity<Faculty> facultyResponseEntity = restTemplate.exchange(
-                "http://localhost:" + port + "/faculty"
-                , HttpMethod.DELETE
-                , HttpEntity.EMPTY
-                , Faculty.class
-        );
+                "http://localhost:" + port + "/faculty/" + f.getId(),
+                HttpMethod.DELETE,
+                HttpEntity.EMPTY,
+                Faculty.class);
         assertEquals(HttpStatus.OK, facultyResponseEntity.getStatusCode());
-        assertEquals(faculty.getName(), Objects.requireNonNull(facultyResponseEntity.getBody().getName()));
-        assertEquals(faculty.getColor(), Objects.requireNonNull(facultyResponseEntity.getBody().getColor()));
     }
 
     @Test
@@ -110,22 +109,25 @@ public class FacultyControllerRestTemplateTest {
         );
         assertEquals(HttpStatus.OK, facultyResponseEntity.getStatusCode());
         assertEquals(faculty.getName(), Objects.requireNonNull(facultyResponseEntity.getBody().getName()));
-        assertEquals(faculty.getColor(),Objects.requireNonNull(facultyResponseEntity.getBody().getColor()));
+        assertEquals(faculty.getColor(), Objects.requireNonNull(facultyResponseEntity.getBody().getColor()));
     }
 
     @Test
-    void getStudentsByFaculty__returnStatus200AndStudentList() {
+    void readStudentsInFaculty__returnStatus200AndStudentsList() {
+       Faculty saveFaculty= facultyRepository.save(faculty);
+
+        student.setFaculty(saveFaculty);
+        student2.setFaculty(saveFaculty);
         studentRepository.save(student);
-        facultyRepository.save(faculty);
-        student.setFaculty(faculty);
-        ResponseEntity<List<Student>> facultyResponseEntity = restTemplate.exchange(
-                "http://localhost:" + port + "/faculty/students?id=" + faculty.getId(),
-                HttpMethod.GET
-                , null
-                , new ParameterizedTypeReference<List<Student>>() {
+        studentRepository.save(student2);
+        ResponseEntity<List<Student>> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/faculty/students?id=" + saveFaculty.getId(),
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Student>>() {
                 });
-        List<Student> students = facultyResponseEntity.getBody();
-        assertEquals(200,facultyResponseEntity.getStatusCodeValue());
-        assertEquals(List.of(student),students);
+        List<Student> result = responseEntity.getBody().stream().toList();
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(List.of(student,student2),result);
     }
 }
