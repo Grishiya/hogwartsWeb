@@ -1,43 +1,55 @@
 package sky.pro.hogwartsWeb.controller;
 
 import org.springframework.web.bind.annotation.*;
+import sky.pro.hogwartsWeb.exception.StudentException;
+import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
-import sky.pro.hogwartsWeb.service.StudentServiceImpl;
+import sky.pro.hogwartsWeb.service.StudentService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    private final StudentServiceImpl studentServiceImpl;
+    private final StudentService studentService;
 
-    public StudentController(StudentServiceImpl studentServiceImpl) {
-        this.studentServiceImpl = studentServiceImpl;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @PostMapping
     public Student createStudent(@RequestBody Student student) {
-        return studentServiceImpl.createStudent(student);
+        return studentService.createStudent(student);
     }
 
     @GetMapping("/{id}")
     public Student getStudent(@PathVariable Long id) {
-        Student student = studentServiceImpl.getStudent(id);
+        Student student = studentService.getStudent(id);
         return student;
     }
 
     @PutMapping
     public Student setStudent(@RequestBody Student student) {
-        return studentServiceImpl.updateStudent(student);
+        return studentService.updateStudent(student);
     }
 
     @DeleteMapping("/{id}")
     public Student deleteStudent(@PathVariable Long id) {
-        return studentServiceImpl.deleteStudent(id);
+        return studentService.deleteStudent(id);
     }
 
     @GetMapping("/age/{age}")
-    public List<Student> readAll(@PathVariable int age) {
-        return studentServiceImpl.readAll(age);
+
+    public List<Student> readAllAge(@RequestParam int age, @RequestParam(defaultValue = "0") int age2) {
+        if (age2 == 0) {
+            return studentService.readAll(age);
+        }
+        return studentService.findByAgeBetween(age, age2);
     }
+
+    @GetMapping("/{id}/faculty")
+    public Faculty getFaculty(@PathVariable long id) {
+        return studentService.readFaculty(id);
+    }
+
 }

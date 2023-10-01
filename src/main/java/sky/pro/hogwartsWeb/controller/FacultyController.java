@@ -3,7 +3,8 @@ package sky.pro.hogwartsWeb.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sky.pro.hogwartsWeb.model.Faculty;
-import sky.pro.hogwartsWeb.service.FacultyServiceImpl;
+import sky.pro.hogwartsWeb.model.Student;
+import sky.pro.hogwartsWeb.service.FacultyService;
 
 import java.util.List;
 
@@ -11,35 +12,46 @@ import java.util.List;
 @RequestMapping("/faculty")
 public class FacultyController {
 
-    private final FacultyServiceImpl facultyServiceImpl;
+    private final FacultyService facultyService;
 
-    public FacultyController(FacultyServiceImpl facultyServiceImpl) {
-        this.facultyServiceImpl = facultyServiceImpl;
+    public FacultyController(FacultyService facultyService) {
+        this.facultyService = facultyService;
     }
 
     @PostMapping
     public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return facultyServiceImpl.createFaculty(faculty);
+        return facultyService.createFaculty(faculty);
 
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Faculty> getFaculty(@PathVariable long id) {
-        return ResponseEntity.ok(facultyServiceImpl.getFaculty(id));
+        return ResponseEntity.ok(facultyService.getFaculty(id));
     }
 
     @PutMapping
     public Faculty setFaculty(@RequestBody Faculty faculty) {
-        return facultyServiceImpl.updateFaculty(faculty);
+        return facultyService.updateFaculty(faculty);
     }
 
     @DeleteMapping("/{id}")
     public Faculty deleteFaculty(@PathVariable long id) {
-        return facultyServiceImpl.deleteFaculty(id);
+        return facultyService.deleteFaculty(id);
     }
 
     @GetMapping("/color/{color}")
-    public List<Faculty> readAll(@PathVariable String color) {
-        return facultyServiceImpl.readAll(color);
+    public Faculty readAll(@PathVariable String color) {
+        return facultyService.readColor(color);
+    }
+
+    @GetMapping("/find")
+    public Faculty findByColorAndNameIgnoreCase(@RequestParam(required = false) String name,
+                                                @RequestParam(required = false) String color) {
+        return facultyService.findByNameOrColorIgnoreCase(name, color);
+    }
+
+    @GetMapping("/studentds")
+    public List<Student> getStudentsByFaculty(@RequestParam long id) {
+        return facultyService.findStudentsByFacultyId(id);
     }
 }

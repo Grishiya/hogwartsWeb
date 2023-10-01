@@ -5,10 +5,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sky.pro.hogwartsWeb.exception.FacultyException;
 import sky.pro.hogwartsWeb.exception.StudentException;
+import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.StudentRepository;
 
+import java.io.LineNumberInputStream;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +26,14 @@ class StudentServiceImplTest {
     StudentRepository studentRepository;
     @InjectMocks
     StudentServiceImpl underTest;
+    Faculty faculty = new Faculty(
+            1L
+            , "griffindor"
+            , "gold");
     Student student = new Student(
             1L,
             "Grisha",
-            29
+            29,faculty
     );
 
 
@@ -112,5 +121,51 @@ class StudentServiceImplTest {
                 .thenReturn(List.of(student));
         List<Student> result = underTest.readAll(student.getAge());
         assertEquals(List.of(student), result);
+    }
+
+    @Test
+    void readAll_checkReadAllExceptionIfInRepositoryNotStudentWithThisAge_throwsException() {
+        when(studentRepository.findByAge(student.getAge()))
+                .thenReturn(Collections.emptyList());
+        StudentException exception = assertThrows(StudentException.class
+                , () -> underTest.readAll(student.getAge()));
+        assertEquals("Студентов с таким возрастом нет," +
+                "введите другой возраст",exception.getMessage());
+    }
+
+    @Test
+    void findByAgeBetween_checkAgeBetweenMinAgeAndMaxAge_returnedAgeBetween() {
+        when(studentRepository.findByAgeBetween(12
+                , 30))
+                .thenReturn(List.of(student));
+        List<Student> result = underTest.findByAgeBetween(12, 30);
+        assertEquals(List.of(student),result);
+    }
+
+    @Test
+    void findByAgeBetween_checkExceptionIfAgeBetweenMinAgeAndMaxAgeNotRepository_throwsException() {
+        when(studentRepository.findByAgeBetween(student.getAge()
+                , student.getAge())).thenReturn(Collections.emptyList());
+        StudentException exception = assertThrows(StudentException.class
+                , () -> underTest.findByAgeBetween(student.getAge(), student.getAge()));
+        assertEquals("Студентов с таким возрастом нет," +
+                "введите другой возраст",exception.getMessage());
+    }
+
+    @Test
+    void readFaculty_checkReturnedReadFacultyById_returnedReadFaculty() {
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.of(student));
+        Faculty result = underTest.readFaculty(student.getFaculty().getId());
+        assertEquals(faculty,result);
+    }
+
+    @Test
+    void readFaculty_checkExceptionIfStudentNotFacultyId_throwsException() {
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.empty());
+        StudentException exception = assertThrows(StudentException.class
+                , () -> underTest.readFaculty(student.getFaculty().getId()));
+        assertEquals("Такого студента нет",exception.getMessage());
     }
 }
