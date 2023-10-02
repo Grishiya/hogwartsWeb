@@ -1,4 +1,6 @@
 package sky.pro.hogwartsWeb.controller;
+
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,12 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import sky.pro.hogwartsWeb.model.Faculty;
 import sky.pro.hogwartsWeb.model.Student;
 import sky.pro.hogwartsWeb.repository.FacultyRepository;
 import sky.pro.hogwartsWeb.repository.StudentRepository;
-import org.springframework.http.*;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -21,20 +26,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FacultyControllerRestTemplateTest {
     @Autowired
     TestRestTemplate restTemplate;
+    @LocalServerPort
+    int port;
     @Autowired
     FacultyRepository facultyRepository;
     @Autowired
     StudentRepository studentRepository;
-    @LocalServerPort
-    int port;
-    Faculty faculty = new Faculty(1L, "гриффиндор", "золотой");
-
-
+    Faculty faculty = new Faculty(1L, "Griffindor", "gold");
+    Student student = new Student(1L, "Harry", 16);
 
     @AfterEach
     void afterEach() {
-        studentRepository.deleteAll();
         facultyRepository.deleteAll();
+        studentRepository.deleteAll();
     }
 
     @Test
@@ -69,14 +73,17 @@ public class FacultyControllerRestTemplateTest {
     }
 
     @Test
-    void delete__returnStatus200() {
-        Faculty f = facultyRepository.save(faculty);
+    void deleteFaculty__status200AndReturnFaculty() {
+        facultyRepository.save(faculty);
         ResponseEntity<Faculty> facultyResponseEntity = restTemplate.exchange(
-                "http://localhost:" + port + "/faculty/" + f.getId(),
-                HttpMethod.DELETE,
-                HttpEntity.EMPTY,
-                Faculty.class);
+                "http://localhost:" + port + "/faculty"
+                , HttpMethod.DELETE
+                , HttpEntity.EMPTY
+                , Faculty.class
+        );
         assertEquals(HttpStatus.OK, facultyResponseEntity.getStatusCode());
+        assertEquals(faculty.getName(), Objects.requireNonNull(facultyResponseEntity.getBody().getName()));
+        assertEquals(faculty.getColor(), Objects.requireNonNull(facultyResponseEntity.getBody().getColor()));
     }
 
     @Test
@@ -103,26 +110,22 @@ public class FacultyControllerRestTemplateTest {
         );
         assertEquals(HttpStatus.OK, facultyResponseEntity.getStatusCode());
         assertEquals(faculty.getName(), Objects.requireNonNull(facultyResponseEntity.getBody().getName()));
-        assertEquals(faculty.getColor(), Objects.requireNonNull(facultyResponseEntity.getBody().getColor()));
+        assertEquals(faculty.getColor(),Objects.requireNonNull(facultyResponseEntity.getBody().getColor()));
     }
 
     @Test
-    void readStudentsInFaculty__returnStatus200AndStudentsList() {
-       facultyRepository.save(faculty);
-        Student student1 = new Student(0L, "Harry", 13);
-        Student student2 = new Student(0L, "Ron", 13);
-        student1.setFaculty(faculty);
-        student2.setFaculty(faculty);
-        studentRepository.save(student1);
-        studentRepository.save(student2);
-        ResponseEntity<List<Student>> responseEntity = restTemplate.exchange(
+    void getStudentsByFaculty__returnStatus200AndStudentList() {
+        studentRepository.save(student);
+        facultyRepository.save(faculty);
+        student.setFaculty(faculty);
+        ResponseEntity<List<Student>> facultyResponseEntity = restTemplate.exchange(
                 "http://localhost:" + port + "/faculty/students?id=" + faculty.getId(),
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>(){}
-                );
-        List<Student> students = responseEntity.getBody();
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        assertEquals(List.of(student1, student2), students);
+                HttpMethod.GET
+                , null
+                , new ParameterizedTypeReference<List<Student>>() {
+                });
+        List<Student> students = facultyResponseEntity.getBody();
+        assertEquals(200,facultyResponseEntity.getStatusCodeValue());
+        assertEquals(List.of(student),students);
     }
 }

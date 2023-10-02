@@ -1,9 +1,12 @@
 package sky.pro.hogwartsWeb.service;
 
 import nonapi.io.github.classgraph.utils.FileUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sky.pro.hogwartsWeb.exception.AvatarNotFoundException;
@@ -20,6 +23,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.postgresql.hostchooser.HostRequirement.any;
+
 @ExtendWith(MockitoExtension.class)
 class AvatarServiceImplTest {
 
@@ -74,5 +79,14 @@ Avatar avatar=new Avatar(
         assertThrows(AvatarNotFoundException.class, () -> avatarService.readFromDB(student.getId()));
         assertEquals("Аватар не найден", result.getMessage());
 
+    }
+
+    @Test
+    void getPage__returnListOfAvatar() {
+        Avatar avatar = new Avatar();
+        when(avatarRepository.findAll((PageRequest) any()))
+                .thenReturn(new PageImpl<Avatar>(List.of(avatar)));
+        List<Avatar> result = avatarService.getPage(1, 1);
+        assertEquals(List.of(avatar),result);
     }
 }

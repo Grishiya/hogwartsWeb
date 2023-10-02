@@ -96,7 +96,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findFiveStudent() {
+    public List<Student> findLastFiveStudent() {
         return studentRepository.findLastStudent(5);
     }
 
