@@ -1,6 +1,4 @@
 package sky.pro.hogwartsWeb.controller;
-
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +21,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FacultyControllerRestTemplateTest {
     @Autowired
     TestRestTemplate restTemplate;
-    @LocalServerPort
-    int port;
     @Autowired
     FacultyRepository facultyRepository;
     @Autowired
     StudentRepository studentRepository;
-    Faculty faculty = new Faculty(1L, "Griffindor", "gold");
+    @LocalServerPort
+    int port;
+    Faculty faculty = new Faculty(1L, "гриффиндор", "золотой");
 
 
 
     @AfterEach
     void afterEach() {
-        facultyRepository.deleteAll();
         studentRepository.deleteAll();
+        facultyRepository.deleteAll();
     }
 
     @Test
@@ -110,18 +108,17 @@ public class FacultyControllerRestTemplateTest {
 
     @Test
     void readStudentsInFaculty__returnStatus200AndStudentsList() {
-        Faculty saveFaculty = facultyRepository.save(faculty);
-        Student student1 = new Student(1L, "Harry", 13);
-        Student student2 = new Student(2L, "Ron", 13);
-        student1.setFaculty(saveFaculty);
-        student2.setFaculty(saveFaculty);
-        Student s1 = studentRepository.save(student1);
-        Student s2 = studentRepository.save(student2);
+       facultyRepository.save(faculty);
+        Student student1 = new Student(0L, "Harry", 13,faculty);
+        Student student2 = new Student(0L, "Ron", 13,faculty);
+      studentRepository.save(student1);
+        studentRepository.save(student2);
         ResponseEntity<List<Student>> responseEntity = restTemplate.exchange(
-                "http://localhost:" + port + "/faculty/students?id=" + saveFaculty.getId(),
+                "http://localhost:" + port + "/faculty/students?id=" + faculty.getId(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Student>>(){});
+                new ParameterizedTypeReference<>(){}
+                );
         List<Student> students = responseEntity.getBody();
         assertEquals(200, responseEntity.getStatusCodeValue());
         assertEquals(List.of(student1, student2), students);
