@@ -109,9 +109,11 @@ public class FacultyControllerRestTemplateTest {
     @Test
     void readStudentsInFaculty__returnStatus200AndStudentsList() {
        facultyRepository.save(faculty);
-        Student student1 = new Student(0L, "Harry", 13,faculty);
-        Student student2 = new Student(0L, "Ron", 13,faculty);
-      studentRepository.save(student1);
+        Student student1 = new Student(0L, "Harry", 13);
+        Student student2 = new Student(0L, "Ron", 13);
+        student1.setFaculty(faculty);
+        student2.setFaculty(faculty);
+        studentRepository.save(student1);
         studentRepository.save(student2);
         ResponseEntity<List<Student>> responseEntity = restTemplate.exchange(
                 "http://localhost:" + port + "/faculty/students?id=" + faculty.getId(),
