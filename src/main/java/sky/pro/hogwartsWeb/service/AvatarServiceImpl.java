@@ -1,5 +1,7 @@
 package sky.pro.hogwartsWeb.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
-
+    private final Logger logger = LoggerFactory.getLogger(AvatarServiceImpl.class);
     private final String avatarsDir;
     private final StudentService studentService;
     private final AvatarRepository avatarRepository;
@@ -34,18 +37,19 @@ public class AvatarServiceImpl implements AvatarService {
     @Override
     public void uploadAvatar(Long studentId
             , MultipartFile avatarFile) throws IOException {
+        logger.info("Был вызван метод uploadAvatar c параметрами" + studentId + avatarFile);
         Student student = studentService.read(studentId);
         Path filePath = Path.of(avatarsDir
                 , student.getId()
                         + "."
-                        + getExtensions(avatarFile.getOriginalFilename()));
+                        + getExtensions(Objects.requireNonNull(avatarFile.getOriginalFilename())));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
         try (
                 InputStream is = avatarFile.getInputStream();
                 BufferedInputStream bis = new BufferedInputStream(is, 1024);
                 OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-                BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+                BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
         ) {
             bis.transferTo(bos);
         }
@@ -56,19 +60,28 @@ public class AvatarServiceImpl implements AvatarService {
         avatar.setMediaType(avatarFile.getContentType());
         avatar.setData(avatarFile.getBytes());
         avatarRepository.save(avatar);
+        logger.info("Метод загрузил автар студенту");
     }
 
     @Override
     public Avatar readFromDB(long id) {
-        return avatarRepository.findByStudent_id(id)
+        logger.info("Вызван метод readFromDb с параметром" + id);
+        Avatar avatar=avatarRepository.findByStudent_id(id)
                 .orElseThrow(() -> new AvatarNotFoundException("Аватар не найден"));
+        logger.info("Метод вернул автар"+ avatar.getId());
+        return avatar;
     }
+
     @Override
     public List<Avatar> getPage(int pageNo, int size) {
+        logger.info("Вызван метод getPage с параметрами"+pageNo+size);
 
         PageRequest pageRequest = PageRequest.of(pageNo, size);
-        return avatarRepository.findAll(pageRequest).getContent();
+        List<Avatar> avatars=avatarRepository.findAll(pageRequest).getContent();
+        logger.info("Метод вернул список "+ avatars);
+        return avatars;
     }
+
     private String getExtensions(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
