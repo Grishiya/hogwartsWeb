@@ -20,4 +20,6 @@ public interface FacultyService {
     Faculty findByNameOrColorIgnoreCase(String name, String color);
 
     List<Student> findStudentsByFaculty_id(long id);
+
+    String findByLongerName();
 }

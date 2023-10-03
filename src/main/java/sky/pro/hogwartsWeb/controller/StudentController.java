@@ -65,4 +65,24 @@ public class StudentController {
     public List<Student> findLustFiveStudent() {
         return studentService.findLastFiveStudent();
     }
+
+    @GetMapping("/find-student-name-start-a")
+    public List<String> findStudentNameStartCharA() {
+        return studentService.studentNameStartA();
+    }
+
+    @GetMapping("/avg-age-stream")
+    public Double avgAgeByStream() {
+        return studentService.findAvgAgeStream();
+    }
+
+    @GetMapping("/read-student-with-threads")
+    public void readStudentWithThreads() {
+        studentService.readStudentWithThreads();
+    }
+
+    @GetMapping("/read-student-thread-synchronized")
+    public void readStudentWithThreadsSynchronized() {
+        studentService.readStudentWithThreadsSynchronized();
+    }
 }

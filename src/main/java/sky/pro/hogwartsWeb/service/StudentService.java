@@ -26,4 +26,12 @@ public interface StudentService {
 
 
     List<Student> findLastFiveStudent();
+
+    List<String> studentNameStartA();
+
+    Double findAvgAgeStream();
+
+    void readStudentWithThreads();
+
+    void readStudentWithThreadsSynchronized();
 }

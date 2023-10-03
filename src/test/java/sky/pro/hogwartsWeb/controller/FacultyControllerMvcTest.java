@@ -46,6 +46,7 @@ public class FacultyControllerMvcTest {
     StudentServiceImpl studentService;
     Faculty faculty = new Faculty(1L, "griffindor", "gold");
     Student student = new Student(1L, "potnik", 5);
+    List<Faculty> faculties = List.of(faculty);
     @Test
     void createFaculty__status200AndSaveFaculty() throws Exception {
         when(facultyRepository.save(faculty)).thenReturn(faculty);
@@ -132,5 +133,12 @@ public class FacultyControllerMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].name").value(student.getName()))
                 .andExpect(jsonPath("$.[0].age").value(student.getAge()));
+    }
+
+    @Test
+    void findByLongerName__returnStatus200() throws Exception {
+        when(facultyRepository.findAll()).thenReturn(faculties);
+        mockMvc.perform(get("/faculty/find-longer-name"))
+                .andExpect(status().isOk());
     }
 }

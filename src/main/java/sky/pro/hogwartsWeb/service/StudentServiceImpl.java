@@ -1,5 +1,6 @@
 package sky.pro.hogwartsWeb.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import sky.pro.hogwartsWeb.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -120,9 +122,65 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> findLastFiveStudent() {
         logger.info("Был вызван метод dLastFiveStudent");
         List<Student> students = studentRepository.findLastStudent(5);
-        logger.info("Метод вернул последние 5 учеников в списке"+students);
+        logger.info("Метод вернул последние 5 учеников в списке" + students);
         return students;
     }
 
+    @Override
+    public List<String> studentNameStartA() {
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(s -> StringUtils.startsWithIgnoreCase(s, "a"))
+                .sorted()
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public Double findAvgAgeStream() {
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0);
+    }
+
+    @Override
+    public void readStudentWithThreads() {
+        List<Student> students = studentRepository.findAll();
+        System.out.println(students.get(0));
+        System.out.println(students.get(1));
+
+        new Thread(() -> {
+            System.out.println(students.get(2));
+            System.out.println(students.get(3));
+        }).start();
+
+        new Thread(() -> {
+            System.out.println(students.get(4));
+            System.out.println(students.get(5));
+        }).start();
+    }
+
+    @Override
+    public void readStudentWithThreadsSynchronized() {
+        List<Student> students = studentRepository.findAll();
+        print(0);
+        print(1);
+
+        new Thread(() -> {
+            print(2);
+            print(3);
+        }).start();
+
+        new Thread(() -> {
+            print(4);
+            print(5);
+        }).start();
+    }
+
+    private synchronized void print(int index) {
+        System.out.println(studentRepository.findAll().get(index));
+    }
 }
 
