@@ -54,4 +54,9 @@ public class FacultyController {
     public List<Student> getStudentsByFaculty(@RequestParam long id) {
         return facultyService.findStudentsByFaculty_id(id);
     }
+
+    @GetMapping("/find-longer-name")
+    public String findByLongerName() {
+        return facultyService.findByLongerName();
+    }
 }

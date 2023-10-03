@@ -10,6 +10,7 @@ import sky.pro.hogwartsWeb.repository.FacultyRepository;
 import sky.pro.hogwartsWeb.repository.StudentRepository;
 
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,8 +99,16 @@ public class FacultyServiceImpl implements FacultyService {
             throw new FacultyException("Такого факультета нет");
         }
         List<Student> students = studentRepository.findByFaculty_id(id);
-        logger.info("Метод вернул список студентов по факультету" +id +" студенты "+ students);
+        logger.info("Метод вернул список студентов по факультету" + id + " студенты " + students);
         return students;
+    }
+
+    @Override
+    public String findByLongerName() {
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElseThrow(() -> new FacultyException("В БД не хранятся факультеты"));
     }
 }
 

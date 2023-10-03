@@ -34,6 +34,7 @@ class FacultyServiceImplTest {
             1L
             , "Grisha"
             , 29);
+    List<Faculty> faculties = List.of(faculty);
 
 
     @Test
@@ -163,6 +164,13 @@ class FacultyServiceImplTest {
         FacultyException exception = assertThrows(FacultyException.class
                 , () -> underTest.findStudentsByFaculty_id(student.getFaculty().getId()));
         assertEquals("Такого факультета нет", exception.getMessage());
+    }
+
+    @Test
+    void findByLongerName() {
+        when(facultyRepository.findAll()).thenReturn(faculties);
+        String result = underTest.findByLongerName();
+        assertEquals("Griffindor",result);
     }
 }
 
