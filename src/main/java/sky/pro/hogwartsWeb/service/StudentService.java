@@ -30,4 +30,8 @@ public interface StudentService {
     List<String> studentNameStartA();
 
     Double findAvgAgeStream();
+
+    void readStudentWithThreads();
+
+    void readStudentWithThreadsSynchronized();
 }

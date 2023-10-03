@@ -71,8 +71,18 @@ public class StudentController {
         return studentService.studentNameStartA();
     }
 
-    @GetMapping("avg-age-stream")
+    @GetMapping("/avg-age-stream")
     public Double avgAgeByStream() {
         return studentService.findAvgAgeStream();
+    }
+
+    @GetMapping("/read-student-with-threads")
+    public void readStudentWithThreads() {
+        studentService.readStudentWithThreads();
+    }
+
+    @GetMapping("/read-student-thread-synchronized")
+    public void readStudentWithThreadsSynchronized() {
+        studentService.readStudentWithThreadsSynchronized();
     }
 }
