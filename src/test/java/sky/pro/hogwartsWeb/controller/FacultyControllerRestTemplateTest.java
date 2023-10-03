@@ -33,12 +33,12 @@ public class FacultyControllerRestTemplateTest {
     @Autowired
     StudentRepository studentRepository;
     Faculty faculty = new Faculty(1L, "Griffindor", "gold");
-    Student student = new Student(1L, "Harry", 16);
+
 
     @AfterEach
     void afterEach() {
-        facultyRepository.deleteAll();
         studentRepository.deleteAll();
+        facultyRepository.deleteAll();
     }
 
     @Test
@@ -115,9 +115,10 @@ public class FacultyControllerRestTemplateTest {
 
     @Test
     void getStudentsByFaculty__returnStatus200AndStudentList() {
-        studentRepository.save(student);
         facultyRepository.save(faculty);
+        Student student = new Student(1L, "d,jf", 15);
         student.setFaculty(faculty);
+        studentRepository.save(student);
         ResponseEntity<List<Student>> facultyResponseEntity = restTemplate.exchange(
                 "http://localhost:" + port + "/faculty/students?id=" + faculty.getId(),
                 HttpMethod.GET
