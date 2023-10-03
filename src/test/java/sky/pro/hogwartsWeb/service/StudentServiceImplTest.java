@@ -31,7 +31,7 @@ class StudentServiceImplTest {
             , "gold");
     Student student = new Student(
             1L,
-            "Grisha",
+            "AGrisha",
             29
     );
     Student student2 = new Student(
@@ -215,5 +215,19 @@ class StudentServiceImplTest {
                 .limit(5).collect(Collectors.toList()));
         List<Student> result = underTest.findLastFiveStudent();
         assertEquals(students,result);
+    }
+
+    @Test
+    void studentNameStartA() {
+        when(studentRepository.findAll()).thenReturn(students);
+        List<String> result = underTest.studentNameStartA();
+        assertEquals(List.of("AGRISHA"),result);
+    }
+
+    @Test
+    void findAvgAgeStream() {
+        when(studentRepository.findAll()).thenReturn(students);
+        Double result = underTest.findAvgAgeStream();
+        assertEquals(29,result);
     }
 }

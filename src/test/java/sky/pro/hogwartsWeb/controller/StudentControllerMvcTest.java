@@ -40,6 +40,7 @@ public class StudentControllerMvcTest {
     @SpyBean
     StudentServiceImpl studentService;
     Student student = new Student(1L, "Harry", 15);
+    List<Student> students = List.of(student);
     Faculty faculty = new Faculty(1L, "Griffindor", "Gold");
 
     @Test
@@ -121,5 +122,19 @@ public class StudentControllerMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(student.getFaculty().getName()))
                 .andExpect(jsonPath("$.color").value(student.getFaculty().getColor()));
+    }
+
+    @Test
+    void findStudentNameStartCharA__returnStatus200() throws Exception {
+        when(studentRepository.findAll()).thenReturn(students);
+        mockMvc.perform(get("/student/find-student-name-start-a"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void avgAgeByStream__returnStatus200() throws Exception {
+        when(studentRepository.findAll()).thenReturn(students);
+        mockMvc.perform(get("/student/avg-age-stream"))
+                .andExpect(status().isOk());
     }
 }
